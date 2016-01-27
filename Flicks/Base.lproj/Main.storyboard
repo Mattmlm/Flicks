@@ -248,7 +248,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
-                                    <segue destination="tX9-Xp-Tsa" kind="embed" id="LYA-WV-Nli"/>
+                                    <segue destination="tX9-Xp-Tsa" kind="embed" identifier="MenuSegue" id="LYA-WV-Nli"/>
                                 </connections>
                             </containerView>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="N4P-jE-vv1">

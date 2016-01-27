@@ -14,6 +14,8 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     @IBOutlet weak var tableView: UITableView!
     
+    weak var containerViewController: ContainerViewController?
+    
     var count: Int = 0
     var checked: [[Bool]]!
     var checkedKey:String = "CHECKED_CATEGORIES"
@@ -108,12 +110,10 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
         
+        if (containerViewController != nil) {
+            containerViewController!.checked = self.checked
+        }
         
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        
-        let containerViewController = storyboard.instantiateViewControllerWithIdentifier("ContainerViewController") as! ContainerViewController
-        let tabVC = storyboard.instantiateViewControllerWithIdentifier("TabBarController") as! UITabBarController
-        containerViewController.checked = self.checked
         //containerViewController.reloadInputViews()
         //containerViewController.prepareForSegue(UIStoryboardSegue(identifier: "tabBarEmbed", source: containerViewController, destination: tabVC), sender: nil)
     }

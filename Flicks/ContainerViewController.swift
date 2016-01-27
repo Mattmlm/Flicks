@@ -14,10 +14,16 @@ class ContainerViewController: UIViewController {
     @IBOutlet weak var menuContainerView: UIView!
     @IBOutlet weak var mainContainerView: UIView!
     
-    
+    var mainTabBarController: TabBarViewController?
     
     var leftMenuWidth:CGFloat = 0
-    var checked:[[Bool]]!
+    var checked:[[Bool]]! {
+        didSet(newValue) {
+            if (newValue != nil) {
+                updateTabs(newValue)
+            }
+        }
+    }
     var checkedKey:String = "CHECKED_CATEGORIES"
     let categories = [["Now Playing","Popular","Top Rated", "Upcoming"],["On the Air", "Airing Today", "Top Rated", "Popular"]]
     let endPoints = [["movie/now_playing", "movie/popular", "movie/top_rated", "movie/upcoming"], ["tv/on_the_air", "tv/airing_today", "tv/top_rated", "tv/popular"]]
@@ -91,6 +97,14 @@ class ContainerViewController: UIViewController {
         
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         
+        if segue.identifier == "MenuSegue" {
+            if let navVC = segue.destinationViewController as? UINavigationController {
+                if let menuVC = navVC.topViewController as? MenuViewController {
+                    menuVC.containerViewController = self
+                }
+            }
+        }
+        
         if segue.destinationViewController.isKindOfClass(UITabBarController) {
             
             let defaults = NSUserDefaults.standardUserDefaults()
@@ -127,6 +141,8 @@ class ContainerViewController: UIViewController {
             }
             
             tabVC.viewControllers? = viewControllers
+            
+            self.mainTabBarController = tabVC as? TabBarViewController
             
             /*
             let nowPlayingMoviesNavigationController = storyboard.instantiateViewControllerWithIdentifier("MoviesNavigationController") as! UINavigationController
@@ -167,7 +183,39 @@ class ContainerViewController: UIViewController {
 
     }
     
-
+    func updateTabs(newTabs: [[Bool]]) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        if let tabVC = self.mainTabBarController {
+            tabVC.tabBar.barStyle = .Black
+            tabVC.tabBar.tintColor = UIColor.orangeColor()
+            var viewControllers = [UINavigationController]()
+            
+            for i in 0 ..< categories[0].count {
+                if newTabs[0][i] {
+                    let moviesNavigationController = storyboard.instantiateViewControllerWithIdentifier("MoviesNavigationController") as! UINavigationController
+                    let moviesViewController = moviesNavigationController.topViewController as! MoviesViewController
+                    moviesViewController.endpoint = endPoints[0][i]
+                    moviesNavigationController.tabBarItem.title = categories[0][i]
+                    moviesNavigationController.tabBarItem.image = UIImage(named: "popular")
+                    moviesNavigationController.navigationBar.barStyle = .BlackTranslucent
+                    viewControllers.append(moviesNavigationController)
+                }
+            }
+            for i in 0 ..< categories[1].count {
+                if newTabs[0][i] {
+                    let tvShowsNavigationController = storyboard.instantiateViewControllerWithIdentifier("TVShowsNavigationController") as! UINavigationController
+                    let tvShowsViewController = tvShowsNavigationController.topViewController as! TVShowsViewController
+                    tvShowsViewController.endpoint = endPoints[1][i]
+                    tvShowsNavigationController.tabBarItem.title = categories[1][i]
+                    tvShowsNavigationController.tabBarItem.image = UIImage(named: "popular")
+                    tvShowsNavigationController.navigationBar.barStyle = .BlackTranslucent
+                    viewControllers.append(tvShowsNavigationController)
+                }
+            }
+            
+            tabVC.viewControllers? = viewControllers
+        }
+    }
 }
 
 extension ContainerViewController : UIScrollViewDelegate {
